@@ -61,10 +61,14 @@ export enum RecorderErrors {
 
 const ENDPOINT = "http://localhost:3001";
 
-const sendBlob = (blob: Blob) => {
+const sendBlob = (blob: Blob, status: string) => {
   const params = new FormData();
-  console.log("send blob ", sendBlob.length)
+  console.log("send blob ", blob.size)
   params.append('blob', blob);
+  params.append('sequence', "1");
+  params.append('status', status);
+
+
   axios
     .post(
       ENDPOINT + '/api/upload',
@@ -248,7 +252,7 @@ export function useReactMediaRecorder({
 
   const onRecordingActive = ({ data }: BlobEvent) => {
     //console.log("record data", data)
-    sendBlob(data)
+    sendBlob(data, mediaRecorder.current?.state ?? "null")
     mediaChunks.current.push(data);
   };
 

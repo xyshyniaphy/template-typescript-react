@@ -17,7 +17,7 @@ const http = require("http");
 
 
 const multer = require('multer')
-const upload = multer({ dest: 'upload/' })
+const upload = multer({ storage: multer.memoryStorage() })
 
 var filePath = './public/record.mp4';
 
@@ -37,9 +37,19 @@ app.use(function (req, res, next) {
 
 app.post('/api/upload', upload.single('blob'), function (req, res, next) {
     console.log(req.file)
+    console.log(req.body.sequence)
+    console.log(req.body.status)
+    res.send('Done')
     // req.file is the `avatar` file
     // req.body will hold the text fields, if there were any
 })
+
+// app.post('/api/endupload', function (req, res) {
+//     console.log("endupload")
+//     // req.file is the `avatar` file
+//     // req.body will hold the text fields, if there were any
+// })
+
 const server = http.createServer(app);
 
 
