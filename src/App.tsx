@@ -22,11 +22,31 @@ const RecordView = () => {
   } = useReactMediaRecorder({ video: true, audio: true, screen: true, onStop });
 
 
-  const realUrl = "https://www.youtube.com/watch?v=YIYI_difm-A";
+  const realUrl = "";
 
 
   return (
     <div>
+
+
+
+
+
+      <Row>
+        <Col span={24}>
+          <form action="http://127.0.0.1:3001/api/profile" encType="multipart/form-data" method="post">
+            <div >
+              <input type="file" name="record" />
+              <input type="text" placeholder="Number of speakers" name="nspeakers" />
+              <input type="submit" value="Get me the stats!" />
+            </div>
+          </form>
+        </Col>
+      </Row>
+
+
+
+
       <Row>
         <Col span={24}> <p>{status}</p></Col>
       </Row>
