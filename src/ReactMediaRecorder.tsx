@@ -84,7 +84,7 @@ export function useReactMediaRecorder({
       });
       socketIo.current = socket;
     }
-  }, [socketIo.current]);
+  }, []);
 
 
   const [recordBlobs, setRecordBlobs] = useState<Blob[]>([]);
@@ -93,7 +93,7 @@ export function useReactMediaRecorder({
     if (socketIo.current && recordBlobs.length > 0) {
       console.log("recording recordBlobs", recordBlobs)
       const data = recordBlobs[0]
-      socketIo.current.emit("record", data);
+      //socketIo.current.emit("record", data);
       setRecordBlobs([...recordBlobs].splice(1, recordBlobs.length - 1))
     }
   }, [recordBlobs]);
