@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
-import socketIOClient, { Socket } from "socket.io-client";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
-
 export type ReactMediaRecorderRenderProps = {
   error: string;
   muteAudio: () => void;
@@ -73,33 +70,19 @@ export function useReactMediaRecorder({
 }: ReactMediaRecorderHookProps): ReactMediaRecorderRenderProps {
 
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const socketIo = useRef<any>(null);
-  useEffect(() => {
-    if (!socketIo.current) {
-      console.log("connect socketio");
-      const socket = socketIOClient(ENDPOINT);
-      socket.on("FromAPI", data => {
-        //console.log("data", data)
-      });
-      socketIo.current = socket;
-    }
-  }, []);
+
 
 
   const [recordBlobs, setRecordBlobs] = useState<Blob[]>([]);
 
   useEffect(() => {
-    if (socketIo.current && recordBlobs.length > 0) {
+    if (recordBlobs.length > 0) {
       console.log("recording recordBlobs", recordBlobs)
       const data = recordBlobs[0]
       //socketIo.current.emit("record", data);
       setRecordBlobs([...recordBlobs].splice(1, recordBlobs.length - 1))
     }
   }, [recordBlobs]);
-
-
-
 
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const mediaChunks = useRef<Blob[]>([]);
@@ -239,10 +222,6 @@ export function useReactMediaRecorder({
       mediaRecorder.current.start(1000);
       setStatus("recording");
 
-      if (socketIo.current) {
-        console.log("startrecord")
-        socketIo.current.emit("startrecord");
-      }
 
     }
   };
