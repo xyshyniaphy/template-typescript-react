@@ -17,7 +17,7 @@ const http = require("http");
 
 
 const multer = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'upload/' })
 
 var filePath = './public/record.mp4';
 
@@ -26,7 +26,7 @@ const port = 3001;
 const app = express();
 //app.use(index);
 
-app.use(express.static('public'));
+app.use(express.static('build'));
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -35,7 +35,7 @@ app.use(function (req, res, next) {
 });
 
 
-app.post('/api/profile', upload.single('record'), function (req, res, next) {
+app.post('/api/upload', upload.single('blob'), function (req, res, next) {
     console.log(req.file)
     // req.file is the `avatar` file
     // req.body will hold the text fields, if there were any

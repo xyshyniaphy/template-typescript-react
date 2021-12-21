@@ -31,18 +31,18 @@ const RecordView = () => {
 
 
 
-
+      {/* 
       <Row>
         <Col span={24}>
-          <form action="http://127.0.0.1:3001/api/profile" encType="multipart/form-data" method="post">
+          <form action="http://127.0.0.1:3001/api/upload" encType="multipart/form-data" method="post">
             <div >
-              <input type="file" name="record" />
+              <input type="file" name="blob" />
               <input type="text" placeholder="Number of speakers" name="nspeakers" />
               <input type="submit" value="Get me the stats!" />
             </div>
           </form>
         </Col>
-      </Row>
+      </Row> */}
 
 
 

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
+import axios from 'axios';
+
 export type ReactMediaRecorderRenderProps = {
   error: string;
   muteAudio: () => void;
@@ -59,6 +61,29 @@ export enum RecorderErrors {
 
 const ENDPOINT = "http://localhost:3001";
 
+const sendBlob = (blob: Blob) => {
+  const params = new FormData();
+  console.log("send blob ", sendBlob.length)
+  params.append('blob', blob);
+  axios
+    .post(
+      ENDPOINT + '/api/upload',
+      params,
+      {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      }
+    )
+    .then((result) => {
+      console.log(result)
+    },
+    )
+    .catch(() => {
+      console.log('upload failed...');
+    });
+}
+
 export function useReactMediaRecorder({
   audio = true,
   video = false,
@@ -70,19 +95,16 @@ export function useReactMediaRecorder({
 }: ReactMediaRecorderHookProps): ReactMediaRecorderRenderProps {
 
 
+  // const [recordBlobs, setRecordBlobs] = useState<Blob[]>([]);
 
-
-
-  const [recordBlobs, setRecordBlobs] = useState<Blob[]>([]);
-
-  useEffect(() => {
-    if (recordBlobs.length > 0) {
-      console.log("recording recordBlobs", recordBlobs)
-      const data = recordBlobs[0]
-      //socketIo.current.emit("record", data);
-      setRecordBlobs([...recordBlobs].splice(1, recordBlobs.length - 1))
-    }
-  }, [recordBlobs]);
+  // useEffect(() => {
+  //   if (recordBlobs.length > 0) {
+  //     console.log("recording recordBlobs", recordBlobs)
+  //     const data = recordBlobs[0]
+  //     //socketIo.current.emit("record", data);
+  //     setRecordBlobs([...recordBlobs].splice(1, recordBlobs.length - 1))
+  //   }
+  // }, [recordBlobs]);
 
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const mediaChunks = useRef<Blob[]>([]);
@@ -221,21 +243,17 @@ export function useReactMediaRecorder({
       };
       mediaRecorder.current.start(1000);
       setStatus("recording");
-
-
     }
   };
 
   const onRecordingActive = ({ data }: BlobEvent) => {
     //console.log("record data", data)
-    setRecordBlobs([...recordBlobs, data])
+    sendBlob(data)
     mediaChunks.current.push(data);
-    console.log("record result", mediaChunks.current)
   };
 
   const onRecordingStop = () => {
 
-    console.log("record result", mediaChunks.current)
     const [chunk] = mediaChunks.current;
     const blobProperty: BlobPropertyBag = Object.assign(
       { type: chunk.type },
