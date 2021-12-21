@@ -1,15 +1,59 @@
 import React from 'react';
 import { DatePicker } from 'antd';
+import { Row, Col } from 'antd';
 import logo from './logo.svg';
 import { Button } from 'antd';
+import { useReactMediaRecorder } from "./ReactMediaRecorder";
+
+import ReactPlayer from 'react-player'
+
 import './App.css';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
+const RecordView = () => {
+  const onStop = (blobUrl: string, blob: Blob): void => {
+    console.log(blobUrl, blob)
+  }
+  const {
+    status,
+    startRecording,
+    stopRecording,
+    mediaBlobUrl,
+  } = useReactMediaRecorder({ video: true, audio: true, screen: true, onStop });
+
+
+  const realUrl = "https://www.youtube.com/watch?v=YIYI_difm-A";
+
+
+  return (
+    <div>
+      <Row>
+        <Col span={24}> <p>{status}</p></Col>
+      </Row>
+      <Row>
+        <Col span={12}><button onClick={startRecording}>Start Recording</button></Col>
+        <Col span={12}><button onClick={stopRecording}>Stop Recording</button></Col>
+      </Row> <Row>
+        <Col span={24}>
+          <ReactPlayer url={realUrl} controls={true} />
+        </Col>
+      </Row>
+
+    </div>
+  );
+};
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <Row>
+          <Col span={24}> <RecordView /></Col>
+        </Row>
+        <Row>
+          <Col span={12}><Button type="primary">Primary Button</Button></Col>
+          <Col span={12}><DatePicker /></Col>
+        </Row>
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
@@ -21,9 +65,9 @@ function App() {
         >
           Learn React
         </a>
-        <Button type="primary">Primary Button</Button>
-        <Button>Default Button</Button>
-        <DatePicker />
+
+
+
       </header>
     </div>
   );
