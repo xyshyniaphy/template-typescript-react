@@ -19,7 +19,7 @@ const http = require("http");
 const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 
-var filePath = './public/record.mp4';
+var filePath = './build/record.mp4';
 
 const port = 3001;
 
@@ -36,9 +36,23 @@ app.use(function (req, res, next) {
 
 
 app.post('/api/upload', upload.single('blob'), function (req, res, next) {
-    console.log(req.file)
-    console.log(req.body.sequence)
-    console.log(req.body.status)
+    // console.log(req.file.buffer)
+    // console.log(req.body.sequence)
+    // console.log(req.body.status)
+
+    if (req.body.sequence == "1") {
+        try {
+            fs.unlinkSync(filePath);
+        } catch (error) {
+            console.log('削除しました。');
+        }
+    }
+    const fileStream = fs.createWriteStream(filePath, {
+        flags: 'a'
+    });
+    fileStream.end(req.file.buffer)
+    console.log("writed ", req.file.buffer.byteLength, " @ ", req.body.sequence)
+
     res.send('Done')
     // req.file is the `avatar` file
     // req.body will hold the text fields, if there were any

@@ -61,11 +61,11 @@ export enum RecorderErrors {
 
 const ENDPOINT = "http://localhost:3001";
 
-const sendBlob = (blob: Blob, status: string) => {
+const sendBlob = (blob: Blob, recordSequence: number, status: string) => {
   const params = new FormData();
   console.log("send blob ", blob.size)
   params.append('blob', blob);
-  params.append('sequence', "1");
+  params.append('sequence', String(recordSequence));
   params.append('status', status);
 
 
@@ -109,6 +109,8 @@ export function useReactMediaRecorder({
   //     setRecordBlobs([...recordBlobs].splice(1, recordBlobs.length - 1))
   //   }
   // }, [recordBlobs]);
+
+  const recordSequence = useRef<number>(1);
 
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const mediaChunks = useRef<Blob[]>([]);
@@ -252,12 +254,14 @@ export function useReactMediaRecorder({
 
   const onRecordingActive = ({ data }: BlobEvent) => {
     //console.log("record data", data)
-    sendBlob(data, mediaRecorder.current?.state ?? "null")
+    sendBlob(data, recordSequence.current, mediaRecorder.current?.state ?? "null")
+    recordSequence.current = recordSequence.current + 1
     mediaChunks.current.push(data);
   };
 
   const onRecordingStop = () => {
 
+    recordSequence.current = 1
     const [chunk] = mediaChunks.current;
     const blobProperty: BlobPropertyBag = Object.assign(
       { type: chunk.type },
