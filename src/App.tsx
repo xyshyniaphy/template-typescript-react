@@ -1,6 +1,9 @@
 import React from 'react';
+import { DatePicker } from 'antd';
 import logo from './logo.svg';
+import { Button } from 'antd';
 import './App.css';
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
 function App() {
   return (
@@ -18,6 +21,9 @@ function App() {
         >
           Learn React
         </a>
+        <Button type="primary">Primary Button</Button>
+        <Button>Default Button</Button>
+        <DatePicker />
       </header>
     </div>
   );
